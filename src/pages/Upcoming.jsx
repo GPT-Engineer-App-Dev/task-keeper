@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { format } from "date-fns";
+import { format, isFuture } from "date-fns";
 
-const Index = () => {
+const Upcoming = () => {
   const [tasks, setTasks] = useState([]);
   const [newTask, setNewTask] = useState({ title: "", description: "", dueDate: "" });
+
+  useEffect(() => {
+    // Filter tasks to show only upcoming tasks
+    setTasks(tasks.filter((task) => isFuture(new Date(task.dueDate))));
+  }, [tasks]);
 
   const addTask = () => {
     setTasks([...tasks, { ...newTask, id: Date.now() }]);
@@ -26,7 +31,7 @@ const Index = () => {
   return (
     <div className="container mx-auto p-4">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">All Tasks</h1>
+        <h1 className="text-2xl font-bold">Upcoming Tasks</h1>
         <Dialog>
           <DialogTrigger asChild>
             <Button>Add Task</Button>
@@ -146,4 +151,4 @@ const TaskCard = ({ task, onDelete, onEdit }) => {
   );
 };
 
-export default Index;
+export default Upcoming;
